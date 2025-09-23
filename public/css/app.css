@@ -8,3 +8,58 @@
 .mlm-name { font-weight:600; color:#111827; }
 .mlm-meta { color:#6b7280; font-size:12px; }
 .mlm-children { padding-left: 14px; border-left: 1px dashed #e5e7eb; margin-left: 8px; }
+.mlm-tree-horizontal {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.mlm-node-horizontal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem;
+    position: relative;
+}
+
+/* Node box */
+.mlm-node-label {
+    background: #f3f4f6;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    min-width: 120px;
+    user-select: none;
+    border: 1px solid #ddd;
+}
+
+/* Children container */
+.mlm-children-horizontal {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    gap: 2rem;
+    position: relative;
+}
+
+/* Connecting lines */
+.mlm-node-horizontal::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 2px;
+    height: 2rem;
+    background: #ccc;
+}
+
+.mlm-children-horizontal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2rem;
+    border-top: 2px solid #ccc;
+}

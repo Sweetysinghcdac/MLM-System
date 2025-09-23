@@ -28,7 +28,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+       $user = $request->user();
+        if ($user->is_admin) {
+            return redirect()->route('admin.withdrawals.index'); 
+        }
+
+        return redirect()->intended(route('dashboard', absolute: false)); // Normal user
     }
 
     /**
@@ -43,5 +48,13 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+    protected function authenticated($request, $user)
+    {
+        if ($user->is_admin) {
+            return redirect()->route('admin.withdrawals.index'); // Admin dashboard route
+        }
+
+        return redirect()->route('dashboard'); // Regular user dashboard
     }
 }

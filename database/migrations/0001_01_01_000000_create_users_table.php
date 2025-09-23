@@ -25,6 +25,7 @@ return new class extends Migration
             $table->decimal('balance', 12, 2)->default(0); // commission balance
             $table->decimal('total_commission_earned', 12, 2)->default(0);
             $table->rememberToken()->nullable();
+            
             $table->timestamps();
         });
 
