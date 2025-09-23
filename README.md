@@ -64,3 +64,86 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+
+
+
+# Laravel MLM Demo
+
+A lightweight Multi-Level Marketing demo in Laravel with:
+- User registration with referral codes
+- Referral hierarchy (self-referencing users.referrer_id)
+- Transactions with blockchain (5% fee) and manual (2% fee) modes
+- Commission: immediate referrer earns 10% of referred user's points
+- Payout request system with balance & threshold
+
+## Setup
+1. Copy files into a new Laravel project
+2. Configure `.env` for DB
+3. `composer install`
+4. `php artisan migrate --seed`
+5. Install auth scaffolding (Breeze) or adapt routes
+6. `php artisan serve`
+
+Login using seeded user: `candidate@example.com` / `password`
+
+
+laravel-mlm/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Auth/
+│   │   │   │   └── RegisterController.php
+│   │   │   ├── DashboardController.php
+│   │   │   ├── MLMTreeController.php
+│   │   │   ├── PayoutController.php
+│   │   │   └── TransactionController.php
+│   │   ├── Middleware/
+│   │   │   └── CheckReferralCode.php
+│   │   └── Requests/
+│   │       └── StoreTransactionRequest.php
+│   ├── Models/
+│   │   ├── User.php
+│   │   ├── Transaction.php
+│   │   └── Payout.php
+│   └── Services/
+│       └── CommissionService.php
+│
+├── database/
+│   ├── migrations/
+│   │   ├── 2025_09_22_000000_create_users_table.php
+│   │   ├── 2025_09_22_000001_create_transactions_table.php
+│   │   └── 2025_09_22_000002_create_payouts_table.php
+│   └── seeders/
+│       └── UserSeeder.php
+│
+├── routes/
+│   └── web.php
+│
+├── resources/
+│   ├── views/
+│   │   ├── auth/
+│   │   │   └── register.blade.php
+│   │   ├── dashboard/
+│   │   │   ├── index.blade.php
+│   │   │   └── tree.blade.php
+│   │   ├── payouts/
+│   │   │   └── index.blade.php
+│   │   ├── transactions/
+│   │   │   └── create.blade.php
+│   │   └── layouts/
+│   │       └── app.blade.php
+│   └── components/
+│       └── navbar.blade.php
+│
+├── public/
+│   ├── css/
+│   │   └── app.css
+│   └── js/
+│       └── app.js
+│
+├── composer.json
+├── package.json
+├── vite.config.js
+└── README.md
