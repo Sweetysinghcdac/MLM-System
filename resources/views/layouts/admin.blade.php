@@ -15,12 +15,24 @@
         <!-- Main Content -->
         <div class="flex-1 bg-gray-100 min-h-screen">
             <!-- Navbar -->
-            <header class="bg-white shadow p-4 flex justify-between items-center">
+           <header class="bg-white shadow p-4 flex justify-between items-center">
                 <h1 class="text-lg font-semibold">@yield('page-title')</h1>
-                <span class="text-sm text-gray-600">
-                    Logged in as: {{ auth()->user()->name }}
-                </span>
+                
+                <div class="flex items-center gap-4">
+                    <span class="text-sm text-gray-600">Logged in as: {{ auth()->user()->name }}</span>
+                    
+                    <!-- Logout Form -->
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button 
+                            type="submit" 
+                            class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
+                            Logout
+                        </button>
+                    </form>
+                </div>
             </header>
+
 
             <!-- Content -->
             <main class="p-6">
