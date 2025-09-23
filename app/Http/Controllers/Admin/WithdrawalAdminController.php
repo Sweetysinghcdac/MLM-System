@@ -11,7 +11,8 @@ class WithdrawalAdminController extends Controller
     public function index()
     {
         $requests = WithdrawalRequest::with('user')->latest()->get();
-        return view('admin.withdrawals.index', compact('requests'));
+       
+         return view('admin.withdrawals.index', compact('requests'));
     }
 
     public function update(Request $request, WithdrawalRequest $withdrawal)

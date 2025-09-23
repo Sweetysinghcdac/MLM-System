@@ -7,7 +7,19 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\PayoutController;
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\WithdrawalController;
-use App\Http\Controllers\Admin\WithdrawalAdminController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\UserAdminController;
+use App\Http\Controllers\Admin\PropertyController as AdminPropertyController;
+use App\Http\Controllers\Admin\TransactionAdminController;
+use App\Http\Controllers\Admin\PayoutAdminController;
+use App\Http\Controllers\Admin\ReferralCommissionController;
+use App\Http\Controllers\Admin\WithdrawalAdminController as AdminWithdrawalController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\ReferralController as AdminReferralController;
+
+
+
+
 
 
 use Illuminate\Support\Facades\Route;
@@ -51,9 +63,23 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
-Route::middleware(['auth','is_admin'])->prefix('admin')->group(function () {
-    Route::get('/withdrawals', [WithdrawalAdminController::class, 'index'])->name('admin.withdrawals.index');
-    Route::put('/withdrawals/{withdrawal}', [WithdrawalAdminController::class, 'update'])->name('admin.withdrawals.update');
+Route::middleware(['auth','is_admin'])->prefix('admin')->name('admin.')->group(function () {
+     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/users', [UserAdminController::class, 'index'])->name('users.index');
+    Route::get('/users/{user}', [UserAdminController::class, 'show'])->name('users.show');
+
+    Route::get('/transactions', [TransactionAdminController::class, 'index'])->name('transactions.index');
+
+    Route::get('/payouts', [PayoutAdminController::class, 'index'])->name('payouts.index');
+    Route::put('/payouts/{payout}', [PayoutAdminController::class, 'update'])->name('payouts.update');
+
+    Route::get('/withdrawals', [WithdrawalAdminController::class, 'index'])->name('withdrawals.index');
+    Route::put('/withdrawals/{withdrawal}', [WithdrawalAdminController::class, 'update'])->name('withdrawals.update');
+     Route::resource('properties', AdminPropertyController::class)->only(['index', 'show']);
+    Route::resource('withdrawals', AdminWithdrawalController::class)->only(['index', 'show']);
+    Route::resource('referrals', AdminReferralController::class)->only(['index', 'show']);
 });
+
 
 require __DIR__.'/auth.php';

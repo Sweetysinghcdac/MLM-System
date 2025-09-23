@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
 class Commission extends Model
 {
+       use HasFactory;
     protected $fillable = ['referrer_id','referred_user_id','transaction_id','amount', 'level'
 ];
 

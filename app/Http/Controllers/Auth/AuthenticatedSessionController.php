@@ -30,7 +30,7 @@ class AuthenticatedSessionController extends Controller
 
        $user = $request->user();
         if ($user->is_admin) {
-            return redirect()->route('admin.withdrawals.index'); 
+            return redirect()->route('admin.dashboard'); 
         }
 
         return redirect()->intended(route('dashboard', absolute: false)); // Normal user

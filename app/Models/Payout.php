@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Payout extends Model
 {
+       use HasFactory;
     protected $fillable = ['user_id','amount','status','note'];
     protected $casts = [
         'amount' => 'decimal:2',

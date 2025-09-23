@@ -1,149 +1,144 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# MLM System (Laravel)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A **simplified Multi-Level Marketing (MLM) application** built with Laravel. This project implements a referral system, commission calculations, and transaction processing with user and admin dashboards.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Table of Contents
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- [Project Overview](#project-overview)  
+- [Features](#features)  
+- [Database Structure](#database-structure)  
+- [Installation](#installation)  
+- [Usage](#usage)  
+- [Testing](#testing)  
+- [Directory Structure](#directory-structure)  
+- [Author](#author)  
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Project Overview
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+This project simulates an MLM platform where:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- Users can **refer other users** via a referral code.  
+- A **referral hierarchy** is maintained.  
+- Users earn **commissions** from referrals based on simple rules.  
+- Transactions can be processed in **two modes**: Direct Blockchain (5% fee) or Manual/Off-chain (2% fee).  
+- Admins can manage **withdrawals and user balances**.  
+- Users have dashboards to view their **referrals, commissions, and transactions**.  
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## Features
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### User Features
 
-### Premium Partners
+- Registration with optional referral code.  
+- Dashboard showing:
+  - Total points and balance  
+  - Direct referrals  
+  - Total commission earned  
+  - Transactions history  
+- View **referral tree** (horizontal tree view).  
+- Request payouts when balance exceeds a threshold.  
+- Simulate transactions for testing.  
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Admin Features
 
-## Contributing
+- Manage all users and their withdrawal requests.  
+- Approve or reject withdrawal requests.  
+- View overall referral and commission system.  
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## Database Structure
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**Key Tables:**
 
-## Security Vulnerabilities
+- `users`  
+  - Stores user information, referral relationships (`referrer_id`), balance, and points.
+  - `is_admin` flag determines admin status.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- `properties`  
+  - Represents a property in the system (optional for commissions).  
 
-## License
+- `transactions`  
+  - Records all user transactions with mode and fees.  
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- `commissions`  
+  - Tracks commissions earned by users.  
 
+- `referral_commissions`  
+  - Tracks multi-level commissions based on referrals.  
 
+- `payouts`  
+  - Tracks user payout requests.  
 
+- `withdrawal_requests`  
+  - Tracks admin-managed withdrawal requests.
 
+---
 
-# Laravel MLM Demo
+## Installation
 
-A lightweight Multi-Level Marketing demo in Laravel with:
-- User registration with referral codes
-- Referral hierarchy (self-referencing users.referrer_id)
-- Transactions with blockchain (5% fee) and manual (2% fee) modes
-- Commission: immediate referrer earns 10% of referred user's points
-- Payout request system with balance & threshold
+1. Clone the repository:
 
-## Setup
-1. Copy files into a new Laravel project
-2. Configure `.env` for DB
-3. `composer install`
-4. `php artisan migrate --seed`
-5. Install auth scaffolding (Breeze) or adapt routes
-6. `php artisan serve`
-
-Login using seeded user: `candidate@example.com` / `password`
+```bash
+git clone <repo_url>
+cd mlm-system
 
 
-laravel-mlm/
-├── app/
-│   ├── Http/
-│   │   ├── Controllers/
-│   │   │   ├── Auth/
-│   │   │   │   └── RegisterController.php
-│   │   │   ├── DashboardController.php
-│   │   │   ├── MLMTreeController.php
-│   │   │   ├── PayoutController.php
-│   │   │   └── TransactionController.php
-│   │   ├── Middleware/
-│   │   │   └── CheckReferralCode.php
-│   │   └── Requests/
-│   │       └── StoreTransactionRequest.php
-│   ├── Models/
-│   │   ├── User.php
-│   │   ├── Transaction.php
-│   │   └── Payout.php
-│   └── Services/
-│       └── CommissionService.php
-│
-├── database/
-│   ├── migrations/
-│   │   ├── 2025_09_22_000000_create_users_table.php
-│   │   ├── 2025_09_22_000001_create_transactions_table.php
-│   │   └── 2025_09_22_000002_create_payouts_table.php
-│   └── seeders/
-│       └── UserSeeder.php
-│
-├── routes/
-│   └── web.php
-│
-├── resources/
-│   ├── views/
-│   │   ├── auth/
-│   │   │   └── register.blade.php
-│   │   ├── dashboard/
-│   │   │   ├── index.blade.php
-│   │   │   └── tree.blade.php
-│   │   ├── payouts/
-│   │   │   └── index.blade.php
-│   │   ├── transactions/
-│   │   │   └── create.blade.php
-│   │   └── layouts/
-│   │       └── app.blade.php
-│   └── components/
-│       └── navbar.blade.php
-│
-├── public/
-│   ├── css/
-│   │   └── app.css
-│   └── js/
-│       └── app.js
-│
-├── composer.json
-├── package.json
-├── vite.config.js
-└── README.md
+composer install
+npm install && npm run dev
+
+
+cp .env.example .env
+php artisan key:generate
+
+
+php artisan migrate:fresh 
+php artisan serve
+
+
+sage
+
+User login: Access the dashboard at /dashboard.
+
+Admin login: Use is_admin user. Admin panel is accessible at /admin/withdrawals.
+
+Referral tree: Navigate to /dashboard/tree to view the hierarchical referral structure.
+
+Transactions: Users can simulate transactions via the "Simulate Transaction" page.
+
+Payouts: Users can request payouts if their balance exceeds a threshold.
+
+
+app/
+├── Models/
+│   ├── User.php
+│   ├── Transaction.php
+│   ├── Commission.php
+│   ├── ReferralCommission.php
+│   ├── Payout.php
+│   └── WithdrawalRequest.php
+├── Http/
+│   ├── Controllers/
+│   │   ├── Auth/
+│   │   ├── DashboardController.php
+│   │   └── Admin/WithdrawalAdminController.php
+│   └── Middleware/
+│       └── IsAdmin.php
+database/
+├── factories/
+├── migrations/
+└── seeders/
+resources/
+├── views/
+│   ├── dashboard/
+│   │   ├── tree.blade.php
+│   │   ├── _node_collapsible.blade.php
+│   └── auth/login.blade.php
+routes/
+├── web.php
+
