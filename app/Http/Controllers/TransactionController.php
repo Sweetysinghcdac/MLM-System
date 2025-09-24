@@ -10,7 +10,7 @@ use App\Http\Requests\StoreTransactionRequest;
 
 class TransactionController extends Controller
 {
-     protected $svc;
+    protected $svc;
 
     public function __construct(TransactionService $svc)
     {

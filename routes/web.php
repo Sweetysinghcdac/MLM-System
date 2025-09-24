@@ -9,7 +9,7 @@ use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\WithdrawalController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UserAdminController;
-use App\Http\Controllers\Admin\PropertyController as AdminPropertyController;
+// use App\Http\Controllers\Admin\PropertyController as AdminPropertyController;
 use App\Http\Controllers\Admin\TransactionAdminController;
 use App\Http\Controllers\Admin\PayoutAdminController;
 use App\Http\Controllers\Admin\ReferralCommissionController;
@@ -76,7 +76,7 @@ Route::middleware(['auth','is_admin'])->prefix('admin')->name('admin.')->group(f
 
     Route::get('/withdrawals', [WithdrawalAdminController::class, 'index'])->name('withdrawals.index');
     Route::put('/withdrawals/{withdrawal}', [WithdrawalAdminController::class, 'update'])->name('withdrawals.update');
-     Route::resource('properties', AdminPropertyController::class)->only(['index', 'show']);
+    //  Route::resource('properties', AdminPropertyController::class)->only(['index', 'show']);
     Route::resource('withdrawals', AdminWithdrawalController::class)->only(['index', 'show']);
     Route::resource('referrals', AdminReferralController::class)->only(['index', 'show']);
 });

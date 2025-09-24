@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Models\Transaction;
 use App\Models\Payout;
 use App\Models\WithdrawalRequest;
-use App\Models\Property;
 
 
 class AdminDashboardController extends Controller
@@ -19,8 +18,7 @@ class AdminDashboardController extends Controller
         $transactionsCount = Transaction::count();
         $payoutsCount = Payout::count();
         $withdrawalsCount = WithdrawalRequest::count();
-        $propertiesCount = Property::count();
 
-        return view('admin.dashboard', compact('usersCount', 'transactionsCount', 'payoutsCount', 'withdrawalsCount','propertiesCount'));
+        return view('admin.dashboard', compact('usersCount', 'transactionsCount', 'payoutsCount', 'withdrawalsCount'));
     }
 }

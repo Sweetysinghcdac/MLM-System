@@ -9,7 +9,7 @@ class ReferralController extends Controller
 {
    public function index()
     {
-        $referrals = ReferralCommission::with(['user', 'referrer', 'property'])
+        $referrals = ReferralCommission::with(['user', 'referrer'])
             ->latest()
             ->paginate(10);
 
