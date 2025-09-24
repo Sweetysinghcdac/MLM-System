@@ -11,7 +11,7 @@
         </div>
         <div class="p-6 bg-white shadow rounded-lg">
             <h2 class="text-lg font-semibold">Total Properties</h2>
-            <p class="text-2xl mt-2">{{ $propertiesCount }}</p>
+            <p class="text-2xl mt-2"></p>
         </div>
         <div class="p-6 bg-white shadow rounded-lg">
             <h2 class="text-lg font-semibold">Transactions</h2>

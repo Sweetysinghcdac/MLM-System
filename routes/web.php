@@ -44,6 +44,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/tree', [DashboardController::class, 'tree'])->name('tree');
+    Route::get('/api/tree/downline/{user_id}', [DashboardController::class, 'getDownline']);
 
     // Transactions
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');

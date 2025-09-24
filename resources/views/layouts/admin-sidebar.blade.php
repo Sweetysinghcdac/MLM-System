@@ -9,7 +9,7 @@
         <a href="{{ route('admin.users.index') }}" class="block px-3 py-2 rounded hover:bg-gray-700">
             Users
         </a>
-        <a href="{{ route('admin.properties.index') }}" class="block px-3 py-2 rounded hover:bg-gray-700">
+        <a href="" class="block px-3 py-2 rounded hover:bg-gray-700">
             Properties
         </a>
         <a href="{{ route('admin.transactions.index') }}" class="block px-3 py-2 rounded hover:bg-gray-700">
