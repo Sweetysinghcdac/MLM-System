@@ -16,6 +16,11 @@ class Commission extends Model
         'level'  => 'integer',
     ];
 
+       public function user()
+        {
+            return $this->belongsTo(User::class, 'referred_user_id');
+        }
+
     public function referrer()
     {
         return $this->belongsTo(User::class, 'referrer_id');
@@ -30,4 +35,5 @@ class Commission extends Model
     {
         return $this->belongsTo(Transaction::class);
     }
+    
 }

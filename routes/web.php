@@ -17,6 +17,8 @@ use App\Http\Controllers\Admin\WithdrawalAdminController as AdminWithdrawalContr
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ReferralController as AdminReferralController;
 
+use App\Http\Controllers\Admin\AdminSettingsController;
+use App\Http\Controllers\Admin\AdminCommissionController;
 
 
 
@@ -66,9 +68,10 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth','is_admin'])->prefix('admin')->name('admin.')->group(function () {
      Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-
     Route::get('/users', [UserAdminController::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [UserAdminController::class, 'show'])->name('users.show');
+    Route::get('/users/{user}/edit', [UserAdminController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [UserAdminController::class, 'update'])->name('users.update');
 
     Route::get('/transactions', [TransactionAdminController::class, 'index'])->name('transactions.index');
 
@@ -80,6 +83,15 @@ Route::middleware(['auth','is_admin'])->prefix('admin')->name('admin.')->group(f
     //  Route::resource('properties', AdminPropertyController::class)->only(['index', 'show']);
     Route::resource('withdrawals', AdminWithdrawalController::class)->only(['index', 'show']);
     Route::resource('referrals', AdminReferralController::class)->only(['index', 'show']);
+    // Route::resource('referrals', [AdminReferralController::class, 'show'])->name('referrals.show');
+
+
+    // Commissions
+    Route::get('/commissions', [AdminCommissionController::class, 'index'])->name('commissions.index');
+
+    // Settings
+    Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings.index');
+    Route::put('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');
 });
 
 
