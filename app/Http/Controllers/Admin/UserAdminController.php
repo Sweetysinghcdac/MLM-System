@@ -33,31 +33,64 @@ class UserAdminController extends Controller
 
       public function show(User $user)
     {
-        // Eager load related data
-        $user->load(['referrer','referrals', 'commissions' => function($q){ $q->latest(); }]);
+        // 1. Eager load all necessary data in a single, efficient query.
+        // We load referrals up to a certain depth (e.g., 3 levels) to start,
+        // which avoids the N+1 problem for the initial view.
+        $user->load([
+            'referrer', 
+            'commissions' => function($q) {
+                // Eager load the related user for each commission record
+                $q->latest()->with('user'); 
+            },
+            // Eager load referrals nested three levels deep
+            'referrals.referrals.referrals' 
+        ]);
 
-        // Build referral tree (recursive)
-        $tree = $this->buildReferralTree($user);
+        // 2. Prepare the data for the Treant.js tree view
+        // The `formatTreeDataForTreant` method works on the data already loaded above.
+        $treeConfigData = [
+            'chart' => [
+                'container' => "#mlm-tree",
+                'connectors' => [
+                    'type' => 'step'
+                ],
+                'node' => [
+                    'collapsable' => true
+                ],
+            ],
+            'nodeStructure' => $this->formatTreeDataForTreant($user),
+        ];
 
-        // Commission history (paginated)
-        $commissions = $user->commissions()->with(['referrer','user'])->latest()->paginate(20);
+        // 3. Prepare commissions for the view (e.g., paginated list)
+        $commissions = $user->commissions()->latest()->with(['referrer', 'user'])->paginate(20);
 
-        return view('admin.users.show', compact('user','tree','commissions'));
+        return view('admin.users.show', compact('user', 'commissions', 'treeConfigData'));
     }
 
-    private function buildReferralTree(User $user)
+    /**
+     * Helper method to format eager-loaded data for Treant.js.
+     * This method does not make new database queries.
+     */
+    private function formatTreeDataForTreant(User $user)
     {
-        $children = $user->referrals()->with('referrals')->get()->map(function ($child) {
-            return [
-                'user' => $child,
-                'children' => $this->buildReferralTree($child),
-            ];
-        });
-
-        return [
-            'user' => $user,
-            'children' => $children,
+        $node = [
+            'text' => [
+                'name' => $user->name,
+                'title' => 'ID: ' . $user->id,
+                'desc' => 'Points: ' . $user->points,
+            ],
+            'children' => [],
+            'HTMLclass' => 'user-node'
         ];
+
+        // This recursive loop works on the data already in memory.
+        if ($user->referrals->isNotEmpty()) {
+            foreach ($user->referrals as $referral) {
+                $node['children'][] = $this->formatTreeDataForTreant($referral);
+            }
+        }
+
+        return $node;
     }
 
      public function edit(User $user)
@@ -91,5 +124,63 @@ class UserAdminController extends Controller
         });
 
         return redirect()->route('admin.users.show', $user)->with('success', 'User updated.');
+    }
+
+
+    public function viewUserTree(Request $request)
+    {
+        $userId = $request->input('user_id');
+
+        // Find the user or show an error if not found
+        $user = User::find($userId);
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found. Please enter a valid user ID.');
+        }
+
+        // Get the entire downline of the user
+        $downline = $this->getDownlineRecursive($user);
+
+        $treeConfigData = [
+            'chart' => [
+                'container' => "#mlm-tree",
+                'connectors' => [
+                    'type' => 'step'
+                ],
+                'node' => [
+                    'collapsable' => true
+                ],
+            ],
+            'nodeStructure' => $downline,
+        ];
+
+        return view('admin.referrals.tree_view', [
+            'treeConfigData' => $treeConfigData,
+            'user' => $user,
+        ]);
+    }
+
+
+    protected function getDownlineRecursive(User $user)
+    {
+        $node = [
+            'text' => [
+                'name' => $user->name,
+                'title' => 'ID: ' . $user->id,
+                'desc' => 'Points: ' . $user->points,
+            ],
+            'children' => [],
+            'HTMLclass' => 'user-node'
+        ];
+
+        $user->load('referrals');
+
+        if ($user->referrals->isNotEmpty()) {
+            foreach ($user->referrals as $referral) {
+                $node['children'][] = $this->getDownlineRecursive($referral);
+            }
+        }
+
+        return $node;
     }
 }

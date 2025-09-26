@@ -20,7 +20,7 @@
             Withdrawals
         </a> -->
         <a href="{{ route('admin.referrals.index') }}" class="block px-3 py-2 rounded hover:bg-gray-700">
-            Referrals
+            Referral Tree
         </a>
          <a href="{{ route('admin.commissions.index') }}" class="block px-3 py-2 rounded hover:bg-gray-700">
             User  Commissions

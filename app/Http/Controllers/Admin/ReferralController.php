@@ -4,57 +4,78 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Commission;
 use App\Models\User;
 
-use App\Models\Commission;
 class ReferralController extends Controller
 {
    public function index()
-{
-    $users = User::with(['referrals', 'commissions'])->get();
+    {
+        $referrals = Commission::with(['user', 'referrer'])
+            ->latest()
+            ->paginate(10);
 
-    $treeConfigs = [];
-
-    foreach ($users as $user) {
-        $treeConfigs[$user->id] = $this->buildTreeConfig($user);
+        return view('admin.referrals.index', compact('referrals'));
     }
 
-    return view('admin.referrals.index', compact('treeConfigs'));
-}
+      public function viewUserTree(Request $request)
+    {
+        $userId = $request->input('user_id');
 
-protected function buildTreeConfig(User $user)
-{
-    $rootNode = [
-        'text' => [
-            'name' => $user->name,
-            'title' => 'Balance: ₹' . number_format($user->balance, 2),
-            'desc' => 'Total Earned: ₹' . number_format($user->commissions->sum('amount'), 2),
-        ],
-        'HTMLclass' => 'user-node',
-    ];
+        // Find the user or show an error if not found
+        $user = User::find($userId);
 
-    $children = $user->referrals->map(function ($ref) {
-        return [
-            'text' => [
-                'name' => $ref->name,
-                'title' => 'Balance: ₹' . number_format($ref->balance, 2),
-                'desc' => 'Total Earned: ₹' . number_format($ref->commissions->sum('amount'), 2),
-            ]
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found. Please enter a valid user ID.');
+        }
+
+        // Get the entire downline of the user
+        $downline = $this->getDownlineRecursive($user);
+
+        $treeConfigData = [
+            'chart' => [
+                'container' => "#mlm-tree",
+                'connectors' => [
+                    'type' => 'step'
+                ],
+                'node' => [
+                    'collapsable' => true
+                ],
+            ],
+            'nodeStructure' => $downline,
         ];
-    })->toArray();
 
-    return [
-        'chart' => [
-            'container' => '', // filled dynamically in Blade
-            'connectors' => ['type' => 'step'],
-            'node' => ['HTMLclass' => 'nodeExample1'],
-        ],
-        'nodeStructure' => array_merge($rootNode, [
-            'children' => $children,
-        ]),
-    ];
-}
+        return view('admin.referrals.tree_view', [
+            'treeConfigData' => $treeConfigData,
+            'user' => $user,
+        ]);
+    }
 
+    /**
+     * Recursively fetch a user's downline for Treant.js.
+     */
+    protected function getDownlineRecursive(User $user)
+    {
+        $node = [
+            'text' => [
+                'name' => $user->name,
+                'title' => 'ID: ' . $user->id,
+                'desc' => 'Points: ' . $user->points,
+            ],
+            'children' => [],
+            'HTMLclass' => 'user-node'
+        ];
+
+        $user->load('referrals');
+
+        if ($user->referrals->isNotEmpty()) {
+            foreach ($user->referrals as $referral) {
+                $node['children'][] = $this->getDownlineRecursive($referral);
+            }
+        }
+
+        return $node;
+    }
 
     public function show(ReferralCommission $referral)
     {

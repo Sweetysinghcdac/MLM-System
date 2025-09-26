@@ -80,11 +80,12 @@ Route::middleware(['auth','is_admin'])->prefix('admin')->name('admin.')->group(f
 
     Route::get('/withdrawals', [WithdrawalAdminController::class, 'index'])->name('withdrawals.index');
     Route::put('/withdrawals/{withdrawal}', [WithdrawalAdminController::class, 'update'])->name('withdrawals.update');
-    //  Route::resource('properties', AdminPropertyController::class)->only(['index', 'show']);
     Route::resource('withdrawals', AdminWithdrawalController::class)->only(['index', 'show']);
     Route::resource('referrals', AdminReferralController::class)->only(['index', 'show']);
-    // Route::resource('referrals', [AdminReferralController::class, 'show'])->name('referrals.show');
 
+    // Route to handle the tree view request
+    Route::get('/tree', [UserAdminController::class, 'viewUserTree'])->name('tree.view');
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
     // Commissions
     Route::get('/commissions', [AdminCommissionController::class, 'index'])->name('commissions.index');
